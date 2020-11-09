@@ -1,0 +1,23 @@
+{
+  "name": "easyelpapi-order",
+  "version": "1.0.0",
+  "description": "Discord Bot: - Using Stripe Api - Using Database Mysql - Based on https://launchpass.com - Managing transaction linked to discord permissions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florian-kyn/Easyelpapi-order.git"
+  },
+  "author": "Florian Lepage",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/florian-kyn/Easyelpapi-order/issues"
+  },
+  "homepage": "https://github.com/florian-kyn/Easyelpapi-order#readme",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "mysql2": "^2.2.5"
+  }
+}
