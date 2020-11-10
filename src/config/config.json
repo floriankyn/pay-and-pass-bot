@@ -1,0 +1,14 @@
+{
+  "database": {
+    "username": "discordBot",
+    "database": "easyelpapi",
+    "password": "Azerty11!",
+    "host": "localhost",
+    "port": "3006"
+  },
+
+  "discord": {
+    "token": "NzU5NDAyMDU3NzE4OTU2MDMz.X28-Rw.Xx0IZwWV2mZe6nPlKyu2M8JQOVw",
+    "prefix": "?"
+  }
+}

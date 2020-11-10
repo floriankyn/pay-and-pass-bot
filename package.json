@@ -18,6 +18,7 @@
   "homepage": "https://github.com/florian-kyn/Easyelpapi-order#readme",
   "dependencies": {
     "discord.js": "^12.4.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "stripe": "^8.121.0"
   }
 }

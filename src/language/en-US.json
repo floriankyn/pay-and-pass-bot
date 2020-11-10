@@ -1,3 +1,177 @@
 {
-
+  "BaseManager": {
+    "selectUserId": {
+      "messageError": [
+        "The specified user is not valid.",
+        "The specified user does not exists on the server."
+      ]
+    },
+    "selectRoleId": {
+      "messageError": [
+        "The specified role is not valid.",
+        "The specified role does not exists on the server."
+      ]
+    }
+  },
+  "StaffManager": {
+    "addStaff": {
+      "messageSuccess": [
+        "USER has been successfully added to the staff list, welcome :))"
+      ],
+      "messageError": [
+        "You must specify a user to add to the staff list.",
+        "USER is already staff, shame on you, you don't even know your mates.",
+        "You are not an administrator, you can't use this command."
+      ]
+    },
+    "removeStaff": {
+      "messageSuccess": [
+        "USER has been successfully removed from the staff list."
+      ],
+      "messageError": [
+        "You must specify a user to removed from the staff list.",
+        "USER is not staff, shame on you, you don't even know your mates.",
+        "You are not an administrator, you can't use this command."
+      ]
+    }
+  },
+  "Utils": {
+    "help": {
+      "title": [
+        "Help Command:"
+      ],
+      "fieldName": [
+        "Here are the commands:",
+        "Here are the commands for moderator:"
+      ],
+      "value": [
+        "Send you a link to sub to the private channel plan.",
+        "Display info relative to the bot.",
+        "Help you to use the bot.",
+        "Give the specified user moderation privileges.",
+        "Remove the specified user moderation privileges.",
+        "Set the channel as private.",
+        "Set back the channel as public.",
+        "Show some channel information."
+      ]
+    },
+    "prefix": {
+      "message": "Hey <@AUTHORID>, My prefix is: `PREFIX`."
+    }
+  },
+  "PrivateChannelsManager": {
+    "privateChannelAdd": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "You must specify the private role people must have on this server before set a private channel.\nHere is the command => `PREFIXprivate-role-set <@role/roleId>`",
+        "The private role does not exists anymore.\nPlease reset it using: `PREFIXprivate-role-set <@role/roleId>`",
+        "This channel is already set as private.\nIt has been added by `AUTHOR` the `TIME`."
+      ],
+      "messageSuccess": [
+        "This channel has been successfully added to the private list.\nNow only people with the role ROLE can use this channel."
+      ]
+    },
+    "privateChannelRemove": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "You must specify the private role people must have on this server before set a private channel.\nHere is the command => `PREFIXprivate-role-set <@role/roleId>`",
+        "The private role does not exists anymore.\nPlease reset it using: `PREFIXprivate-role-set <@role/roleId>`",
+        "This channel is not set as private."
+      ],
+      "messageSuccess": [
+        "This channel has been successfully removed from the private list."
+      ]
+    }
+  },
+  "PrivateRolesManager": {
+    "privateRoleRemove": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "You must specify the role to remove from private.",
+        "The role you specified is not valid.",
+        "There is no role set as private for this server.\nHere is the command => `PREFIXprivate-role-set <@role/roleId>`"
+      ],
+      "messageSuccess": [
+        "You successfully removed the private role from the database."
+      ]
+    },
+    "privateRoleAdd": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "You must specify the role to set as private.",
+        "The role you specified is not valid.",
+        "There is already a role set as private for this server.\nHere is the command => `PREFIXprivate-role-remove <@role/roleId>`"
+      ],
+      "messageSuccess": [
+        "The role has been successfully set as the private one."
+      ]
+    },
+    "privateRole": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "There is no role set as private for this server.\nHere is the command => `PREFIXprivate-role-set <@role/roleId>`",
+        "The private role does not exists anymore.\nPlease reset it using: `PREFIXprivate-role-set <@role/roleId>`"
+      ],
+      "messageSuccess": [
+        "The private role set for this server is ROLE."
+      ]
+    }
+  },
+  "PrivateManager": {
+    "privateChannelSet": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "This channel is already set as private. You cannot set it up again.",
+        "You must specify the private role to set to this channel.",
+        "The role you specified is not valid. Please retry wit ha valid one.",
+        "You must specify the number of day the subscription will be effective.",
+        "The number of day must be at least 1",
+        "You must specify the subscription price of this channel! (price in USD dollars).",
+        "The price must higher than 1."
+      ],
+      "messageSuccess": [
+        "You successfully set the channel as private. Now only users with the role ROLE will have access to this channel."
+      ]
+    },
+    "privateChannelRemove": {
+      "messageError": [
+        "You are not an administrator, you cannot use this command.",
+        "This channel not set as private. You cannot remove it."
+      ],
+      "messageSuccess": [
+        "This channel has been successfully removed from private and set as public."
+      ]
+    },
+    "channelInfo": {
+      "embed": {
+        "channelPrivateFalse": {
+          "author": "Channels Information:",
+          "fields": {
+            "names": [
+              "Channel Name:",
+              "In the category:",
+              "Channel State:"
+            ],
+            "value": [
+              "Public"
+            ]
+          }
+        },
+        "channelPrivateTrue": {
+          "author": "Channels Information:",
+          "fields": {
+            "names": [
+              "Channel Name:",
+              "In the category:",
+              "Channel State:",
+              "Private Role:"
+            ],
+            "value": [
+              "Private"
+            ]
+          }
+        }
+      }
+    }
+  }
 }
