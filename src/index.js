@@ -19,6 +19,7 @@ const {Database} = require("./database/Database.js");
 const {StaffManager} = require("./action/administration/StaffManager.js");
 const {Utils} = require("./action/everyone/Utils.js");
 const {PrivateManager} = require("./action/moderation/PrivateManager.js");
+const {PrivateStoreManager} = require("./action/everyone/PrivateStoreManager.js");
 
 // Event imports
 
@@ -34,6 +35,7 @@ client.on(`message`, (message) => {
     new StaffManager(message, config, language, client).selector();
     new Utils(message, config, language, client).selector();
     new PrivateManager(message, config, language, client).selector();
+    new PrivateStoreManager(message, config, language, client).selector()
 });
 
 // Login to Discord Api
