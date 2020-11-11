@@ -1,12 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <div>
-        <h1>USD$#{price}</h1>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <title>Title</title>
+    </head>
+    <body>
+    <div class="inner-container">
+        <section class="container">
+            <div>
+                <div class="header-container">
+                    <h1 class="header">#{channelName}</h1>
+                </div>
+
+                <h4 class="subline">$#{price} To Pay</h4>
+                <div class="image-container">
+                    <img class="image" src="https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1440924046/wi1mlnkbn2jluko8pzkj.png" alt="discord pp">
+                </div>
+                <div class="form-inner-container">
+                    <form action="" class="form-container">
+                        <div class="label-container">
+                            <label class="form-label" for="dcId">Your Discord ID</label><br>
+                        </div>
+                        <div class="box-container">
+                            <input class="input-box" type="text" id="dcId" name="dcId"><br>
+                        </div>
+                        <div class="sumbit-container">
+                            <input class="sumbit-button" type="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     </div>
-</body>
+    </body>
 </html>
