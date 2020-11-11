@@ -173,5 +173,12 @@
         }
       }
     }
+  },
+  "PrivateStoreManager": {
+    "store": {
+      "messageError": [
+        "There is currently no private channels available on this server right now."
+      ]
+    }
   }
 }
