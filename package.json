@@ -17,8 +17,13 @@
   },
   "homepage": "https://github.com/florian-kyn/Easyelpapi-order#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "discord.js": "^12.4.1",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
     "mysql2": "^2.2.5",
+    "nodemon": "^2.0.6",
+    "path": "^0.12.7",
     "stripe": "^8.121.0"
   }
 }

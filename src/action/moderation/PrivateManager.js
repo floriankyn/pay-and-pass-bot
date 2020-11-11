@@ -62,6 +62,13 @@ class PrivateManager{
                     if(rows.length >= 1) {
                         this.db.connection().query(`DELETE FROM dc_private_channels WHERE channel_id = "${this.message.channel.id}"`, (err) => {
                             if(err) throw err;
+                            stripe.products.update(
+                                rows[0].stripe_product_id,
+                                {
+                                    active: false
+                                }
+                            ).then().catch(console.error);
+
                             let overwrites = []; // permissions container
                             let rolesId = []; //server roles id container
                             this.message.guild.roles.cache.map(role => rolesId.push(role.id)); //guild roles mapper
@@ -118,57 +125,57 @@ class PrivateManager{
                                     if(parseInt(this.args[2]) >= 1) {
                                         if(typeof this.args[3] !== "undefined") {
                                             if(parseInt(this.args[3]) > 1) {
-                                                this.db.connection().query(`INSERT INTO dc_private_channels (channel_id, guild_id, role_id, renewal_in_ms, added_at, added_by) VALUES ("${this.message.channel.id}", "${this.message.guild.id}", "${roleId}", "${parseInt(this.args[2] * 86400000)}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
-                                                    if(err) throw err;
-                                                    stripe.products.create({
-                                                        name: this.message.channel.name,
-                                                        active: true,
-                                                        description: this.message.channel.topic !== null ? this.message.channel.topic : "none",
-                                                        metadata: {
-                                                            application: parseInt(this.args[3]),
-                                                            currency: "usd",
+                                                stripe.products.create({
+                                                    name: this.message.channel.name,
+                                                    images: [
+                                                        this.message.guild.iconURL()
+                                                    ],
+                                                    active: true,
+                                                    description: this.message.channel.topic !== null ? this.message.channel.topic : "none",
+                                                }).then(async respond => {
+                                                    await stripe.prices.create({
+                                                        unit_amount: parseInt(this.args[3]) * 100,
+                                                        currency: 'usd',
+                                                        recurring: {interval: 'month'},
+                                                        product: respond.id,
+                                                    }).then().catch(console.error);
+                                                    this.db.connection().query(`INSERT INTO dc_private_channels (stripe_product_id, channel_id, guild_id, role_id, renewal_in_ms, added_at, added_by) VALUES ("${respond.id}" ,"${this.message.channel.id}", "${this.message.guild.id}", "${roleId}", "${parseInt(this.args[2] * 86400000)}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
+                                                        if(err) throw err;
+                                                        let overwrites = []; // permissions container
+                                                        let rolesId = []; //server roles id container
+                                                        this.message.guild.roles.cache.map(role => rolesId.push(role.id)); //guild roles mapper
+                                                        for(let i = 0; rolesId.length > i; i++) {
+                                                            if(rolesId[i] !== roleId) {
+                                                                overwrites.push(
+                                                                    {
+                                                                        id: rolesId[i],
+                                                                        deny: "VIEW_CHANNEL"
+                                                                    }
+                                                                );
+                                                            } else {
+                                                                overwrites.push(
+                                                                    {
+                                                                        id: rolesId[i],
+                                                                        allow: [
+                                                                            "VIEW_CHANNEL",
+                                                                            "SEND_MESSAGES",
+                                                                            "ADD_REACTIONS",
+                                                                            "ATTACH_FILES",
+                                                                            "EMBED_LINKS"
+                                                                        ]
+                                                                    }
+                                                                );
+                                                            }
                                                         }
-                                                    }).then(respond => {
-                                                        
-                                                    }).catch(console.error);
-
-                                                    let overwrites = []; // permissions container
-                                                    let rolesId = []; //server roles id container
-                                                    this.message.guild.roles.cache.map(role => rolesId.push(role.id)); //guild roles mapper
-                                                    for(let i = 0; rolesId.length > i; i++) {
-                                                        if(rolesId[i] !== roleId) {
-                                                            overwrites.push(
-                                                                {
-                                                                    id: rolesId[i],
-                                                                    deny: "VIEW_CHANNEL"
-                                                                }
-                                                            );
-                                                        } else {
-                                                            overwrites.push(
-                                                                {
-                                                                    id: rolesId[i],
-                                                                    allow: [
-                                                                        "VIEW_CHANNEL",
-                                                                        "SEND_MESSAGES",
-                                                                        "ADD_REACTIONS",
-                                                                        "ATTACH_FILES",
-                                                                        "EMBED_LINKS"
-                                                                    ]
-                                                                }
-                                                            );
-                                                        }
-                                                    }
-                                                    this.message.channel.overwritePermissions(overwrites,
-                                                        `Channel Set as privat for ${this.message.guild.roles.cache.find(role => role.id === roleId)} for ${this.args[2]} days subs.`
-                                                    ).then(channel => {
-                                                        channel.send(
-                                                            this.language.privateChannelSet.messageSuccess[0].replace("ROLE", this.message.guild.roles.cache.find(role => role.id === roleId))
-                                                        ).then().catch(console.error);
-                                                    }).catch(console.error);
-
-
-
-                                                });
+                                                        this.message.channel.overwritePermissions(overwrites,
+                                                            `Channel Set as privat for ${this.message.guild.roles.cache.find(role => role.id === roleId)} for ${this.args[2]} days subs.`
+                                                        ).then(channel => {
+                                                            channel.send(
+                                                                this.language.privateChannelSet.messageSuccess[0].replace("ROLE", this.message.guild.roles.cache.find(role => role.id === roleId))
+                                                            ).then().catch(console.error);
+                                                        }).catch(console.error);
+                                                    });
+                                                }).catch(console.error);
                                             } else {
                                                 this.message.delete().then(message => {
                                                     message.channel.send(
