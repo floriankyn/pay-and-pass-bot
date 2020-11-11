@@ -50,7 +50,7 @@ class PrivateStoreManager{
                     let channel = this.message.guild.channels.cache.get(info[i].channel_id)
                     stuff.push({
                         name: `:coin: $${info[i].price} #${channel.name}`,
-                        value: ` - [${channel.topic !== null ? channel.topic : `Private access to ${channel} for $${info[i].price}.`}](https://google.com)`,
+                        value: ` - [${channel.topic !== null ? channel.topic : `Private access to ${channel} for $${info[i].price}.`}](http://localhost:3000/${info[i].stripe_product_id})`,
                         inline: false
                     });
                 }

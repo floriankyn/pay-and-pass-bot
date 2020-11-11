@@ -30,8 +30,8 @@ background: url(../images/1.png) repeat;
 }
 
 h1,h2,h3,h4,h5,h6{
-	margin:0;			   
-}	
+	margin:0;
+}
 p{
 	margin:0;
 }
@@ -69,7 +69,7 @@ p.footer a{
 	color:#3AD5A0;
 }
 p.footer a:hover{
-	color: #B3E03F;	
+	color: #B3E03F;
 }
 /******** SAP ************/
 .sap_tabs{
@@ -80,7 +80,7 @@ p.footer a:hover{
     margin: 0 0 2em 0;
     padding: 1em 1em 1.5em 1em;
     background: #fff;
-    border: 1px solid #e7ebee;	
+    border: 1px solid #e7ebee;
 }
 .pay-tabs h2{
     font-size: 26px;
@@ -114,6 +114,7 @@ p.footer a:hover{
     margin: 0 4%;
     float: left;
     width: 17%;
+    padding-left: 38%;
 }
 .resp-tab-active{
     color: #B3E03F;
@@ -123,7 +124,7 @@ p.footer a:hover{
 	clear: left;
     padding: 2em 2.5em;
     background: #fff;
-    border: 1px solid #e7ebee;	
+    border: 1px solid #e7ebee;
 }
 h2.resp-accordion {
 	cursor: pointer;
@@ -158,7 +159,7 @@ li.resp-tab-item span .pic1,li.resp-tab-item span .pic2,li.resp-tab-item span .p
     border: 1px solid #e7ebee;
     padding: 15px 0px;
     margin-bottom: 15px;
-	cursor:pointer;	
+	cursor:pointer;
 }
 li.resp-tab-item.resp-tab-active span label {
     border: 1px solid #B3E03F;
@@ -439,7 +440,7 @@ label.checkbox {
 	background:#B5E045;
 }
 .payment-info a:hover{
-    background: #3AD5A0;	
+    background: #3AD5A0;
 }
 
 .radio-btns{
@@ -548,13 +549,13 @@ transition:0.5s all;
 	}
 	li.resp-tab-item span .pic2 {
 		background: url(../images/pic3.png) no-repeat 29px 15px #fafafa !important;
-	}	
+	}
 }
 @media (max-width: 1366px){
 	.content {
 		width: 41.5%;
 		margin: 0 auto;
-	}	
+	}
 	input.pay-logo {
 		width: 88.5% !important;
 	}
@@ -566,7 +567,7 @@ transition:0.5s all;
 	}
 	input.pay-logo {
 		width: 87% !important;
-	}	
+	}
 	.single-bottom ul li input[type="checkbox"]+label {
 		padding-left: 24px;
 	}
@@ -581,13 +582,13 @@ transition:0.5s all;
 	}
 	.user-form ul li {
 		width: 26%;
-	}	
+	}
 }
 @media (max-width: 1024px){
 	.content {
 		width: 49.5%;
 		margin: 0 auto;
-	}	
+	}
 	.swit {
 		float: left;
 		width: 44%;
@@ -601,7 +602,7 @@ transition:0.5s all;
 	.resp-tab-item {
 		margin: 0 2%;
 		width: 21%;
-	}	
+	}
 	.user-form ul li {
 		width: 29%;
 	}
@@ -634,7 +635,7 @@ transition:0.5s all;
 	}
 	.radio i {
 		top: 6px;
-	}	
+	}
 	.user-login form input[type="text"], .user-login form input[type="password"] {
 		width: 92%;
 	}
@@ -659,12 +660,12 @@ transition:0.5s all;
 @media (max-width: 736px){
 	.content {
 		width: 64%;
-	}	
+	}
 }
 @media (max-width: 667px){
 	.content {
 		width: 71.5%;
-	}	
+	}
 }
 @media (max-width: 640px){
 	.content {
@@ -680,12 +681,12 @@ transition:0.5s all;
 @media (max-width: 600px){
 	.content {
 		width: 79.5%;
-	}	
+	}
 }
 @media (max-width: 568px){
 	.content {
 		width: 83.5%;
-	}	
+	}
 }
 @media (max-width: 480px){
 	.content {
@@ -724,7 +725,7 @@ transition:0.5s all;
 	}
 	.main h1 {
 		font-size: 25px;
-	}	
+	}
 }
 @media (max-width: 414px){
 	.resp-tab-item {
@@ -742,7 +743,7 @@ transition:0.5s all;
 	}
 	li.resp-tab-item span .pic2 {
 		background: url(../images/pic3.png) no-repeat 46px 15px #fafafa !important;
-	}	
+	}
 	li.resp-tab-item:nth-child(3) ,li.resp-tab-item:nth-child(4){
 		margin-top: 25px;
 	}
@@ -773,7 +774,7 @@ transition:0.5s all;
 	}
 	.user-form ul li {
 		width: 37%;
-	}	
+	}
 	li.resp-tab-item span .pic1 {
 		background: url(../images/pic2.png) no-repeat 42px 15px #fafafa !important;
 	}
@@ -796,7 +797,7 @@ transition:0.5s all;
 	}
 }
 @media (max-width: 375px){
-	
+
 }
 @media (max-width: 320px){
 	.main h1 {
@@ -835,7 +836,7 @@ transition:0.5s all;
 	.payment-info form input[type="submit"] {
 		width: 32%;
 	 margin-bottom: 19px;
-	}	
+	}
 	.tab-form-left {
 		float: left;
 		width: 100%;
