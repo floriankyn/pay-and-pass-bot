@@ -1,10 +1,15 @@
 {
   "database": {
-    "username": "discordBot",
+    "username": "root",
     "database": "easyelpapi",
-    "password": "Azerty11!",
+    "password": "1593715937",
     "host": "localhost",
-    "port": "3006"
+    "port": "3306"
+  },
+
+  "stripe": {
+    "publishableKey": "pk_test_51HiWyuF6q8U5dXkGMTwLufwkOskthbZrRCd3vn6G8gfVhiCczLr4tUS6vUzGTPcnFD2WkkbtlStt5aQG3F3XdVEy00fxnvt8wV",
+    "secretKey": "sk_test_51HiWyuF6q8U5dXkGJAEJQ59bXU8tRZ74WbBG5pGD4pFeJeYK9Zekhk1sJiy9FA8ngLMLrM7PABdy2C6EMHNbnHIm00aFPQM8Pu"
   },
 
   "discord": {
