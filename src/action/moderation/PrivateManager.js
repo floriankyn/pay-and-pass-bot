@@ -139,7 +139,7 @@ class PrivateManager{
                                                         recurring: {interval: 'month'},
                                                         product: respond.id,
                                                     }).then().catch(console.error);
-                                                    this.db.connection().query(`INSERT INTO dc_private_channels (stripe_product_id, channel_id, guild_id, role_id, renewal_in_ms, added_at, added_by) VALUES ("${respond.id}" ,"${this.message.channel.id}", "${this.message.guild.id}", "${roleId}", "${parseInt(this.args[2] * 86400000)}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
+                                                    this.db.connection().query(`INSERT INTO dc_private_channels (price, stripe_product_id, channel_id, guild_id, role_id, renewal_in_ms, added_at, added_by) VALUES ("${parseInt(this.args[3])}" ,"${respond.id}" ,"${this.message.channel.id}", "${this.message.guild.id}", "${roleId}", "${parseInt(this.args[2] * 86400000)}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
                                                         if(err) throw err;
                                                         let overwrites = []; // permissions container
                                                         let rolesId = []; //server roles id container
@@ -293,7 +293,7 @@ class PrivateManager{
                         },
                         {
                             name: this.language.channelInfo.embed.channelPrivateTrue.fields.names[3],
-                            value: this.message.guild.roles.cache.find(role => role.id === info[0].roleId),
+                            value: this.message.guild.roles.cache.find(role => role.id === info[0].role_id),
                             inline: true
                         },
                     )
