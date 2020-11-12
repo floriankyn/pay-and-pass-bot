@@ -45,9 +45,13 @@ setInterval(() => {
                        description: "Access to the private channel."
                    }).then(respond => {
                        let channel = client.channels.cache.get(rows[0].channel_id);
+                       let guild = client.guilds.cache.get(rows[0].guild_id);
                        res.render('product', {
                            price: parseInt(respond.amount) / 100,
                            channelName: `${channel.name}`,
+                           clientSecret: respond.client_secret,
+                           publishableKey: config.stripe.publishableKey,
+                           discordImage: guild.iconURL() !== null ? guild.iconURL() : "https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1440924046/wi1mlnkbn2jluko8pzkj.png",
                            channelDescription: `${channel.topic !== null ? channel.topic : `Private access to #${channel.name} for $${parseInt(respond.amount) / 100} per month.`} `,
                        });
                    }).catch(console.error);

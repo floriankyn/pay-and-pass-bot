@@ -15,7 +15,7 @@
 
                 <h4 class="subline">$#{price} To Pay</h4>
                 <div class="image-container">
-                    <img class="image" src="https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1440924046/wi1mlnkbn2jluko8pzkj.png" alt="discord pp">
+                    <img class="image" src="#{discordImage}" alt="discord pp">
                 </div>
                 <div class="form-inner-container">
                     <form action="" class="form-container">
@@ -33,5 +33,9 @@
             </div>
         </section>
     </div>
+    <script>
+        const Stripe = require("stripe");
+        const stripe = Stripe('pk_test_51HiWyuF6q8U5dXkGMTwLufwkOskthbZrRCd3vn6G8gfVhiCczLr4tUS6vUzGTPcnFD2WkkbtlStt5aQG3F3XdVEy00fxnvt8wV' /*publishableKey*/)
+    </script>
     </body>
 </html>
