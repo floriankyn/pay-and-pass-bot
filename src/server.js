@@ -5,9 +5,9 @@ const express = require('express');
 const app = express();
 const port = 3001;
 
-// pug render engine set
-const pug = require("pug")
-app.set("view engine", "pug");
+// ejs render engine set
+const pug = require("ejs")
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/views"))
 
 // config import
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 // product route creation
-setInterval(() => {
+//setInterval(() => {
     stripe.products.list({
         active: true
     }).then(respond => {
@@ -46,7 +46,8 @@ setInterval(() => {
                    }).then(respond => {
                        let channel = client.channels.cache.get(rows[0].channel_id);
                        let guild = client.guilds.cache.get(rows[0].guild_id);
-                       res.render('product', {
+                       console.log(respond.client_secret)
+                       res.render('index', {
                            price: parseInt(respond.amount) / 100,
                            channelName: `${channel.name}`,
                            clientSecret: respond.client_secret,
@@ -59,7 +60,7 @@ setInterval(() => {
            });
        }
     }).catch(console.error);
-}, 10000)
+//}, 10000)
 
 
 app.listen(port, () => {

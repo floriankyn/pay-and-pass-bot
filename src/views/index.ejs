@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://js.stripe.com/v3/"></script>
+  <title><%= channelName %></title>
+</head>
+<body>
+<div class="inner-container">
+  <section class="container">
+    <div>
+      <div class="header-container">
+        <h1 class="header"><%= channelName %></h1>
+      </div>
+
+      <h4 class="subline">$<%= price %> To Pay</h4>
+      <div class="image-container">
+        <img class="image" src="<%= discordImage %>" alt="discord pp">
+      </div>
+      <div class="form-inner-container">
+        <form>
+          <label class="form-label" for="dcId">Your Discord ID</label>
+          <input class="input-box" type="text" required id="dcId">
+
+          <div id="example4-paymentRequest" id="card-element">
+            <!--Stripe paymentRequestButton Element inserted here-->
+          </div>
+
+          <div class="card-container">
+            <label class="card-only" data-tid="elements_examples.form.pay_with_card">Pay with card</label>
+            <div class="container">
+              <div id="card-element"></div>
+              <button type="submit" id="sumbit" data-tid="elements_examples.form.donate_button"><div class="button-text">Purchace</div></button>
+            </div>
+            <div id="card-errors" role="alert"></div>
+            <div id="card-success" role="alert"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<!-- Scripts for each example: -->
+<script>
+   const publishKey = `<%= publishableKey%>`;
+   const client_secret = `<%= clientSecret%>`
+  const stripe = Stripe(publishKey);
+  const elements = stripe.elements()
+  const displayError = document.querySelector("#card-errors")
+  const displaySuccess = document.querySelector("#card-success")
+  const form = document.querySelector("form")
+  const discord_id = document.querySelector("#dcId")
+  const submbitButton = document.querySelector("#sumbit")
+
+  var card = elements.create("card");
+
+  card.mount("#card-element");
+
+  card.addEventListener("change", ({error}) => {
+    if(error) {
+      displayError.textContent = error.message
+    } else {
+      displayError.textContent = ""
+    }
+  })
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    if(!submbitButton.hasAttribute("disabled")) {
+      submbitButton.setAttribute('disabled', 'true')
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: {
+          card,
+        }
+      });
+
+      if(result.error) {
+        displayError.textContent = result.error.message
+      } else {
+        if(result.paymentIntent.status === "succeeded") {
+          displaySuccess.textContent = "Payment success. You just bought 30 days access to this private channel."
+          form.reset()
+          card.clear()
+        }
+      }
+      submbitButton.removeAttribute("disabled");
+    }
+  })
+
+</script>
+
+</body>
+</html>
