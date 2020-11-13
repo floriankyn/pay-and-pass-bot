@@ -45,14 +45,15 @@
         "Here are the commands for moderator:"
       ],
       "value": [
-        "Send you a link to sub to the private channel plan.",
+        "Display your discord id to specify while purchasing.",
         "Display info relative to the bot.",
         "Help you to use the bot.",
         "Give the specified user moderation privileges.",
         "Remove the specified user moderation privileges.",
         "Set the channel as private.",
         "Set back the channel as public.",
-        "Show some channel information."
+        "Show some channel information.",
+        "Display the channel access store."
       ]
     },
     "prefix": {
@@ -130,7 +131,7 @@
         "The price must higher than 1."
       ],
       "messageSuccess": [
-        "You successfully set the channel as private. Now only users with the role ROLE will have access to this channel."
+        "You successfully set the channel as private."
       ]
     },
     "privateChannelRemove": {
