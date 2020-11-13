@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" type = "text/css" href="css/style.css">
 
   <script src="https://js.stripe.com/v3/"></script>
   <title><%= channelName %></title>
@@ -48,76 +48,79 @@
 <script>
    const publishKey = `<%= publishableKey%>`;
    const client_secret = `<%= clientSecret%>`;
-  const stripe = Stripe(publishKey);
-  const elements = stripe.elements()
-  const displayError = document.querySelector("#card-errors")
-  const displaySuccess = document.querySelector("#card-success")
-  const form = document.querySelector("form")
+   const stripe = Stripe(publishKey);
+   const elements = stripe.elements()
+   const displayError = document.querySelector("#card-errors")
+   const displaySuccess = document.querySelector("#card-success")
+   const form = document.querySelector("form")
+   const url = `<%=serverUrl%>`;
+   const submbitButton = document.querySelector("#sumbit")
 
-  const submbitButton = document.querySelector("#sumbit")
+   console.log(url)
 
-  var card = elements.create("card");
+   var card = elements.create("card");
 
-  card.mount("#card-element");
+   card.mount("#card-element");
 
-  card.addEventListener("change", ({error}) => {
-    if(error) {
-      displayError.textContent = error.message
-    } else {
-      displayError.textContent = ""
-    }
-  })
+   card.addEventListener("change", ({error}) => {
+     if(error) {
+       displayError.textContent = error.message
+     } else {
+       displayError.textContent = ""
+     }
+   })
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault()
-    if(!submbitButton.hasAttribute("disabled")) {
-      submbitButton.setAttribute('disabled', 'true')
-      let discord_id = document.getElementById("dcId").value;
-      let passing = false;
+   form.addEventListener("submit", async (e) => {
+     e.preventDefault()
+     if(!submbitButton.hasAttribute("disabled")) {
+       submbitButton.setAttribute('disabled', 'true')
+       let discord_id = document.getElementById("dcId").value;
+       let passing = false;
 
-      if(discord_id.length === 18) {
-        await fetch(`http://localhost:3001/discord-bool/${discord_id}`)
-          .then(respond => respond.json()
-          .then(content => {
-            if(content.id_validity) {
-              passing = true;
-            }
-        })).catch(console.error);
-      }
-      if(passing) {
-        const result = await stripe.confirmCardPayment(client_secret, {
-          payment_method: {
-            card,
-          }
-        });
+       if(discord_id.length === 18) {
+         await fetch(`http://${url}/discord-bool/${discord_id}`)
+           .then(respond => respond.json()
+           .then(content => {
+             console.log(content)
+             if(content.id_validity) {
+               passing = true;
+             }
+         })).catch(console.error);
+       }
+       if(passing) {
+         const result = await stripe.confirmCardPayment(client_secret, {
+           payment_method: {
+             card,
+           }
+         });
 
-        if(result.error) {
-          displayError.textContent = result.error.message
-        } else {
-          if(result.paymentIntent.status === "succeeded") {
-            let answer = false;
-            await fetch(`http://localhost:3001/discord-push/${discord_id}/<%=channelId%>`)
-              .then(result => result.json()
-              .then(content => {
-                if(content.query_state === "success") {
-                  answer = true;
-                }
-            })).catch(console.error);
-            if(answer) {
-              displaySuccess.textContent = `Payment success. You just bought 30 days access to the channel "<%= channelName %>".`;
-              form.reset();
-              card.clear();
-            } else {
-              displayError.textContent = `Something went wrong, you have been debited of $<%=price%> but the role attribution has fail. Please contact an admin.`;
-            }
-          }
-        }
-      } else {
-        displayError.textContent = `The discord id you specified is not valid.`;
-      }
-      submbitButton.removeAttribute("disabled");
-    }
-  })
+         if(result.error) {
+           displayError.textContent = result.error.message
+         } else {
+           if(result.paymentIntent.status === "succeeded") {
+             let answer = false;
+             await fetch(`http://${url}/discord-push/${discord_id}/<%=channelId%>`)
+               .then(result => result.json()
+               .then(content => {
+                 if(content.query_state === "success") {
+                   answer = true;
+                 }
+             })).catch(console.error);
+             if(answer) {
+               displaySuccess.textContent = `Payment success. You just bought 30 days access to the channel "<%= channelName %>".`;
+               form.reset();
+               card.clear();
+             } else {
+               displayError.textContent = `Something went wrong, you have been debited of $<%=price%> but the role attribution has fail. Please contact an admin.`;
+             }
+           }
+         }
+       } else {
+         displayError.textContent = `The discord id you specified is not valid.`;
+       }
+       submbitButton.removeAttribute("disabled");
+     }
+   })
 </script>
 
 </body>

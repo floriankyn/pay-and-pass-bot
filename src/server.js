@@ -2,11 +2,12 @@
 
 // express init
 const express = require('express');
+const hostname = "localhost"
 const app = express();
 const port = 3001;
 
 // ejs render engine set
-const pug = require("ejs")
+const ejs = require("ejs")
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/views"))
 
@@ -25,11 +26,6 @@ const stripe = require('stripe')(config.stripe.secretKey);
 // Database init
 const {Database} = require("./database/Database.js");
 const db = new Database(config);
-
-// homepage route creation
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-});
 
 // discord id verification
 app.get('/discord-bool/:id', async (req, res) => {
@@ -100,7 +96,7 @@ app.get("/discord-push/:discordId/:channelId", async (req, res) => {
         active: true
     }).then(respond => {
        for(let i = 0; respond.data.length > i; i++) {
-           app.get(`/${respond.data[i].id}/`, (req, res) => {
+           app.get(`/${respond.data[i].id}`, (req, res) => {
                db.connection().query(`SELECT * FROM dc_private_channels WHERE stripe_product_id = "${respond.data[i].id}"`,  (err, rows) => {
                    stripe.paymentIntents.create({
                        amount: rows[0].price * 100,
@@ -114,6 +110,7 @@ app.get("/discord-push/:discordId/:channelId", async (req, res) => {
                            channelName: `${channel.name}`,
                            channelId: rows[0].channel_id,
                            clientSecret: respond.client_secret,
+                           serverUrl: `${hostname}:${port}`,
                            publishableKey: config.stripe.publishableKey,
                            discordImage: guild.iconURL() !== null ? guild.iconURL() : "https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1440924046/wi1mlnkbn2jluko8pzkj.png",
                            channelDescription: `${channel.topic !== null ? channel.topic : `Private access to #${channel.name} for $${parseInt(respond.amount) / 100} per month.`} `,
@@ -127,5 +124,5 @@ app.get("/discord-push/:discordId/:channelId", async (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Web app listening on ${port}`)
 });
