@@ -119,102 +119,60 @@ class PrivateManager{
                     if(err) throw err;
                     if(rows.length < 1) {
                         if(typeof this.args[1] !== "undefined") {
-                            let roleId = new BaseManager(this.config, this.brutLanguage).selectRoleId(this.args[1], this.message);
-                            if(this.message.guild.roles.cache.some(role => role.id === roleId)) {
-                                if(typeof this.args[2] !== "undefined") {
-                                    if(parseInt(this.args[2]) >= 1) {
-                                        if(typeof this.args[3] !== "undefined") {
-                                            if(parseInt(this.args[3]) > 1) {
-                                                stripe.products.create({
-                                                    name: this.message.channel.name,
-                                                    images: [
-                                                        this.message.guild.iconURL()
-                                                    ],
-                                                    active: true,
-                                                    description: this.message.channel.topic !== null ? this.message.channel.topic : "none",
-                                                }).then(async respond => {
-                                                    await stripe.prices.create({
-                                                        unit_amount: parseInt(this.args[3]) * 100,
-                                                        currency: 'usd',
-                                                        recurring: {interval: 'month'},
-                                                        product: respond.id,
-                                                    }).then().catch(console.error);
-                                                    this.db.connection().query(`INSERT INTO dc_private_channels (price, stripe_product_id, channel_id, guild_id, role_id, renewal_in_ms, added_at, added_by) VALUES ("${parseInt(this.args[3])}" ,"${respond.id}" ,"${this.message.channel.id}", "${this.message.guild.id}", "${roleId}", "${parseInt(this.args[2] * 86400000)}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
-                                                        if(err) throw err;
-                                                        let overwrites = []; // permissions container
-                                                        let rolesId = []; //server roles id container
-                                                        this.message.guild.roles.cache.map(role => rolesId.push(role.id)); //guild roles mapper
-                                                        for(let i = 0; rolesId.length > i; i++) {
-                                                            if(rolesId[i] !== roleId) {
-                                                                overwrites.push(
-                                                                    {
-                                                                        id: rolesId[i],
-                                                                        deny: "VIEW_CHANNEL"
-                                                                    }
-                                                                );
-                                                            } else {
-                                                                overwrites.push(
-                                                                    {
-                                                                        id: rolesId[i],
-                                                                        allow: [
-                                                                            "VIEW_CHANNEL",
-                                                                            "SEND_MESSAGES",
-                                                                            "ADD_REACTIONS",
-                                                                            "ATTACH_FILES",
-                                                                            "EMBED_LINKS"
-                                                                        ]
-                                                                    }
-                                                                );
-                                                            }
-                                                        }
-                                                        this.message.channel.overwritePermissions(overwrites,
-                                                            `Channel Set as privat for ${this.message.guild.roles.cache.find(role => role.id === roleId)} for ${this.args[2]} days subs.`
-                                                        ).then(channel => {
-                                                            channel.send(
-                                                                this.language.privateChannelSet.messageSuccess[0].replace("ROLE", this.message.guild.roles.cache.find(role => role.id === roleId))
-                                                            ).then().catch(console.error);
-                                                        }).catch(console.error);
-                                                    });
-                                                }).catch(console.error);
-                                            } else {
-                                                this.message.delete().then(message => {
-                                                    message.channel.send(
-                                                        this.language.privateChannelSet.messageError[7]
-                                                    ).then(message => message.delete({timeout: 10000})).catch(console.error);
-                                                }).catch(console.error);
-                                            }
-                                        } else {
-                                            this.message.delete().then(message => {
-                                                message.channel.send(
-                                                    this.language.privateChannelSet.messageError[6]
-                                                ).then(message => message.delete({timeout: 10000})).catch(console.error);
-                                            }).catch(console.error);
+                            if(parseInt(this.args[1]) > 1) {
+                                stripe.products.create({
+                                    name: this.message.channel.name,
+                                    images: [
+                                        this.message.guild.iconURL()
+                                    ],
+                                    active: true,
+                                    description: this.message.channel.topic !== null ? this.message.channel.topic : "none",
+                                }).then(async respond => {
+                                    await stripe.prices.create({
+                                        unit_amount: parseInt(this.args[1]) * 100,
+                                        currency: 'usd',
+                                        recurring: {interval: 'month'},
+                                        product: respond.id,
+                                    }).then().catch(console.error);
+                                    this.db.connection().query(`INSERT INTO dc_private_channels (price, stripe_product_id, channel_id, guild_id, added_at, added_by) VALUES ("${parseInt(this.args[1])}" ,"${respond.id}" ,"${this.message.channel.id}", "${this.message.guild.id}", "${Date.now()}", "${this.message.author.id}")`, (err) => {
+                                        if(err) throw err;
+                                        let overwrites = []; // permissions container
+                                        let rolesId = []; //server roles id container
+                                        this.message.guild.roles.cache.map(role => rolesId.push(role.id)); //guild roles mapper
+                                        for(let i = 0; rolesId.length > i; i++) {
+                                            overwrites.push(
+                                                {
+                                                    id: rolesId[i],
+                                                    deny: [
+                                                        "VIEW_CHANNEL",
+                                                        "SEND_MESSAGES",
+                                                        "ADD_REACTIONS",
+                                                        "ATTACH_FILES",
+                                                        "EMBED_LINKS"
+                                                    ]
+                                                }
+                                            );
                                         }
-                                    } else { // return an error message if the specified amount of days is under 1
-                                        this.message.delete().then(message => {
-                                            message.channel.send(
-                                                this.language.privateChannelSet.messageError[5]
-                                            ).then(message => message.delete({timeout: 10000})).catch(console.error);
+                                        this.message.channel.overwritePermissions(overwrites,
+                                            `Channel Set as private`
+                                        ).then(channel => {
+                                            channel.send(
+                                                this.language.privateChannelSet.messageSuccess[0]
+                                            ).then().catch(console.error);
                                         }).catch(console.error);
-                                    }
-                                } else { // return an error message if there is not renewal time specified
-                                    this.message.delete().then(message => {
-                                        message.channel.send(
-                                            this.language.privateChannelSet.messageError[4]
-                                        ).then(message => message.delete({timeout: 10000})).catch(console.error);
-                                    }).catch(console.error);
-                                }
-                            } else { // return an error message if the specified role is not valid
+                                    });
+                                }).catch(console.error);
+                            } else {
                                 this.message.delete().then(message => {
                                     message.channel.send(
-                                        this.language.privateChannelSet.messageError[3]
+                                        this.language.privateChannelSet.messageError[7]
                                     ).then(message => message.delete({timeout: 10000})).catch(console.error);
                                 }).catch(console.error);
                             }
-                        } else { // return an error message if there is no role specified
+                        } else {
                             this.message.delete().then(message => {
                                 message.channel.send(
-                                    this.language.privateChannelSet.messageError[2]
+                                    this.language.privateChannelSet.messageError[6]
                                 ).then(message => message.delete({timeout: 10000})).catch(console.error);
                             }).catch(console.error);
                         }
