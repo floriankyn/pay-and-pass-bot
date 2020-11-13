@@ -22,8 +22,10 @@ const {PrivateManager} = require("./action/moderation/PrivateManager.js");
 const {PrivateStoreManager} = require("./action/everyone/PrivateStoreManager.js");
 
 // Event imports
+const {DbListener} = require("./event/DbListener.js");
 
 // Event calls
+new DbListener(config, language, client).purchased();
 
 // Client events
 client.on(`ready`, () => {
