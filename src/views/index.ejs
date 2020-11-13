@@ -95,9 +95,22 @@
           displayError.textContent = result.error.message
         } else {
           if(result.paymentIntent.status === "succeeded") {
-            displaySuccess.textContent = `Payment success. You just bought 30 days access to the channel "<%= channelName %>".`;
-            form.reset();
-            card.clear();
+            let answer = false;
+            console.log(`http://localhost:3001/discord-push/${discord_id}/<%=channelId%>`)
+            await fetch(`http://localhost:3001/discord-push/${discord_id}/<%=channelId%>`)
+              .then(result => result.json()
+              .then(content => {
+                if(content.query_state === "success") {
+                  answer = true;
+                }
+            })).catch(console.error);
+            if(answer) {
+              displaySuccess.textContent = `Payment success. You just bought 30 days access to the channel "<%= channelName %>".`;
+              form.reset();
+              card.clear();
+            } else {
+              displayError.textContent = `Something went wrong, you have been debited of $<%=price%> but the role attribution has fail. Please contact an admin.`;
+            }
           }
         }
       } else {
