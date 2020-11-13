@@ -31,6 +31,23 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 });
 
+// discord id verification
+app.get('/discord-bool/:id', async (req, res) => {
+    let discordId = req.params.id;
+    let answer = false;
+
+    if(discordId.length === 18) {
+        if(await client.users.cache.some(user => user.id === discordId)) {
+            answer = true;
+        }
+    }
+
+    await res.send({
+        id_validity: answer
+    });
+
+});
+
 // product route creation
 //setInterval(() => {
     stripe.products.list({
@@ -38,15 +55,14 @@ app.get('/', (req, res) => {
     }).then(respond => {
        for(let i = 0; respond.data.length > i; i++) {
            app.get(`/${respond.data[i].id}/`, (req, res) => {
-               db.connection().query(`SELECT * FROM dc_private_channels WHERE stripe_product_id = "${respond.data[i].id}"`, async (err, rows) => {
-                   await stripe.paymentIntents.create({
+               db.connection().query(`SELECT * FROM dc_private_channels WHERE stripe_product_id = "${respond.data[i].id}"`,  (err, rows) => {
+                   stripe.paymentIntents.create({
                        amount: rows[0].price * 100,
                        currency: "usd",
                        description: "Access to the private channel."
                    }).then(respond => {
                        let channel = client.channels.cache.get(rows[0].channel_id);
                        let guild = client.guilds.cache.get(rows[0].guild_id);
-                       console.log(respond.client_secret)
                        res.render('index', {
                            price: parseInt(respond.amount) / 100,
                            channelName: `${channel.name}`,
