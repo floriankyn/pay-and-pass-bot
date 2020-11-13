@@ -15,7 +15,10 @@ class DbListener{
     dcPermissionGrant(user) {
         let discordMember = this.client.users.cache.get(user.user_id);
         let discordChannel = this.client.channels.cache.get(user.channel_id);
-        let channelBasePermissions = discordChannel.permissionOverwrites;
+        let channelBasePermissions = []
+
+        discordChannel.permissionOverwrites.each(fn => channelBasePermissions.push(fn))
+
         channelBasePermissions.push({
                 id: discordMember.id,
                 allow: [
@@ -25,7 +28,7 @@ class DbListener{
                     "ATTACH_FILES",
                     "EMBED_LINKS"
                 ]
-            });
+        });
 
         discordChannel.overwritePermissions(channelBasePermissions, `Permission granted for ${discordMember.tag}.`).then(channel => {
             channel.send(`${discordMember}, You just bought an access here! thanks and welcome.`).then(message => {
@@ -50,7 +53,8 @@ class DbListener{
                     if(err) throw err;
                     let allowed_users = rows;
                     for(let i = 0; purchased_users.length > i; i++) {
-                        let userDict = allowed_users.find(rn => rn.user_id === purchased_users[i].user_id);
+                        let userDict = allowed_users.find(rn => rn.user_id === purchased_users[i].user_id && rn.channel_id === purchased_users[i].channel_id);
+
                         if(typeof userDict === "undefined") {
                             this.db.connection().query(`INSERT INTO dc_allowed_users (user_id, time, channel_id) VALUES ("${purchased_users[i].user_id}", "${purchased_users[i].time}", "${purchased_users[i].channel_id}")`, (err) => {
                                 if(err) throw err;
@@ -60,7 +64,7 @@ class DbListener{
                     }
                 });
             });
-        }, 20000);
+        }, 5000);
     }
 
     renewal() {
