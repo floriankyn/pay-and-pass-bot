@@ -40,6 +40,9 @@ class Database {
         this.connection().query(`CREATE TABLE IF NOT EXISTS dc_purchased_users (user_id VARCHAR(30), order_id VARCHAR(30), time VARCHAR(30), channel_id VARCHAR(30))`, (err) => {
             if(err) throw err;
         });
+        this.connection().query(`CREATE TABLE IF NOT EXISTS dc_allowed_users (user_id VARCHAR(30), time VARCHAR(30), channel_id VARCHAR(30))`, (err) => {
+            if(err) throw err;
+        });
     }
 }
 
