@@ -26,7 +26,7 @@ class Utils{
                     case this.prefix + "store":
                         this.store();
                         break;
-                    case this.prefix + "sub":
+                    case this.prefix + "id":
                         this.sub();
                         break;
                     case this.message.content.charAt(2) === "!" ? `<@!${this.client.user.id}>` : `<@${this.client.user.id}>`: // reply the bot prefix
@@ -60,7 +60,8 @@ class Utils{
                 return new MessageEmbed()
                     .setAuthor(this.language.help.title[0], this.client.user.avatarURL())
                     .addField(`${this.language.help.fieldName[0]}`,
-                        "`" + `${this.prefix}sub` + ":` " + this.language.help.value[0] + "\n" +
+                        "`" + `${this.prefix}store` + ":` " + this.language.help.value[8] + "\n" +
+                        "`" + `${this.prefix}id` + ":` " + this.language.help.value[0] + "\n" +
                         "`" + `${this.prefix}info` + ":` " + this.language.help.value[1] + "\n" +
                         "`" + `${this.prefix}help` + ":` " + this.language.help.value[2] + "\n" +
                         "\u200B󠀠󠀠󠀠 \n"
@@ -69,7 +70,7 @@ class Utils{
                         "`" + `${this.prefix}staff-add <@user/userId>` + ":` " + this.language.help.value[3] + "\n" +
                         "`" + `${this.prefix}staff-remove <@user/userId>` + ":` " + this.language.help.value[4] + "\n" +
                         "\u200B󠀠󠀠󠀠 \n" +
-                        "`" + `${this.prefix}private-channel-set <@role/id> <nbOfDays>` + ":` " + this.language.help.value[5] + "\n" +
+                        "`" + `${this.prefix}private-channel-set <Price>` + ":` " + this.language.help.value[5] + "\n" +
                         "`" + `${this.prefix}private-channel-remove` + ":` " + this.language.help.value[6] + "\n" +
                         "`" + `${this.prefix}channel-info` + ":` " + this.language.help.value[7] + "\n" +
                         "\u200B󠀠󠀠󠀠 \n"
