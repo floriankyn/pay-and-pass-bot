@@ -34,7 +34,7 @@ class Database {
         this.connection().query(`CREATE TABLE IF NOT EXISTS dc_staff_members (user_id VARCHAR(30), added_at VARCHAR(30), added_by VARCHAR(30))`, (err) => {
             if(err) throw err;
         });
-        this.connection().query(`CREATE TABLE IF NOT EXISTS dc_private_channels (stripe_product_id VARCHAR(255), channel_id VARCHAR(30), guild_id VARCHAR(30), role_id VARCHAR(30), price VARCHAR(255), renewal_in_ms VARCHAR(255), added_at VARCHAR(30), added_by VARCHAR(30))`, (err) => {
+        this.connection().query(`CREATE TABLE IF NOT EXISTS dc_private_channels (stripe_product_id VARCHAR(255), channel_id VARCHAR(30), guild_id VARCHAR(30), price VARCHAR(255), added_at VARCHAR(30), added_by VARCHAR(30))`, (err) => {
             if(err) throw err;
         });
         this.connection().query(`CREATE TABLE IF NOT EXISTS dc_purchased_users (user_id VARCHAR(30), order_id VARCHAR(30), time VARCHAR(30), channel_id VARCHAR(30))`, (err) => {
