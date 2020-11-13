@@ -56,6 +56,8 @@ class PrivateStoreManager{
                 }
                 return new MessageEmbed()
                     .setAuthor(`Private Channel Store:`, this.client.user.avatarURL())
+                    .setThumbnail(this.message.author.avatarURL())
+                    .setTitle("Store About This Server:")
                     .setColor("BLACK")
                     .addFields(stuff)
                     .setFooter(this.client.user.username)
