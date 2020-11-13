@@ -26,6 +26,7 @@ const {DbListener} = require("./event/DbListener.js");
 
 // Event calls
 new DbListener(config, language, client).purchased();
+new DbListener(config, language, client).renewal();
 
 // Client events
 client.on(`ready`, () => {
