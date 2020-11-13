@@ -47,13 +47,13 @@
 <!-- Scripts for each example: -->
 <script>
    const publishKey = `<%= publishableKey%>`;
-   const client_secret = `<%= clientSecret%>`
+   const client_secret = `<%= clientSecret%>`;
   const stripe = Stripe(publishKey);
   const elements = stripe.elements()
   const displayError = document.querySelector("#card-errors")
   const displaySuccess = document.querySelector("#card-success")
   const form = document.querySelector("form")
-  const discord_id = document.querySelector("#dcId")
+
   const submbitButton = document.querySelector("#sumbit")
 
   var card = elements.create("card");
@@ -72,25 +72,40 @@
     e.preventDefault()
     if(!submbitButton.hasAttribute("disabled")) {
       submbitButton.setAttribute('disabled', 'true')
-      const result = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card,
-        }
-      });
+      let discord_id = document.getElementById("dcId").value;
+      let passing = false;
 
-      if(result.error) {
-        displayError.textContent = result.error.message
-      } else {
-        if(result.paymentIntent.status === "succeeded") {
-          displaySuccess.textContent = "Payment success. You just bought 30 days access to this private channel."
-          form.reset()
-          card.clear()
+      if(discord_id.length === 18) {
+        await fetch(`http://localhost:3001/discord-bool/${discord_id}`)
+          .then(respond => respond.json()
+          .then(content => {
+            if(content.id_validity) {
+              passing = true;
+            }
+        })).catch(console.error);
+      }
+      if(passing) {
+        const result = await stripe.confirmCardPayment(client_secret, {
+          payment_method: {
+            card,
+          }
+        });
+
+        if(result.error) {
+          displayError.textContent = result.error.message
+        } else {
+          if(result.paymentIntent.status === "succeeded") {
+            displaySuccess.textContent = `Payment success. You just bought 30 days access to the channel "<%= channelName %>".`;
+            form.reset();
+            card.clear();
+          }
         }
+      } else {
+        displayError.textContent = `The discord id you specified is not valid.`;
       }
       submbitButton.removeAttribute("disabled");
     }
   })
-
 </script>
 
 </body>
