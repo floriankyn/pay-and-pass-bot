@@ -56,7 +56,7 @@ class DbListener{
                         let userDict = allowed_users.find(rn => rn.user_id === purchased_users[i].user_id && rn.channel_id === purchased_users[i].channel_id);
 
                         if(typeof userDict === "undefined") {
-                            this.db.connection().query(`INSERT INTO dc_allowed_users (user_id, time, channel_id) VALUES ("${purchased_users[i].user_id}", "${purchased_users[i].time}", "${purchased_users[i].channel_id}")`, (err) => {
+                            this.db.connection().query(`INSERT INTO dc_allowed_users (user_id, time, channel_id) VALUES ("${purchased_users[i].user_id}", "${Date.now() + parseInt(purchased_users[i].time)}", "${purchased_users[i].channel_id}")`, (err) => {
                                 if(err) throw err;
                                 this.dcPermissionGrant(purchased_users[i]);
                             });
@@ -64,24 +64,36 @@ class DbListener{
                     }
                 });
             });
-        }, 5000);
+        }, 20000);
     }
 
     renewal() {
-        //TODO: check each hours if people subscriptions are still available, if not remove them from the private role, if close from the limit day, ask them to renew their subs
         setInterval(() => {
-            this.db.connection().query(`SELECT * FROM dc_purchased_users`, (err, rows) => {
+            this.db.connection().query(`SELECT * FROM dc_allowed_users`, (err, rows) => {
                 if(err) throw err;
                 if(rows.length >= 1) {
                     for(let i = 0; rows.length > i; i++) {
-                        let targetedUser = this.client.users.cache.find(user => user.id === rows[i].user_id);
-                        if(rows[i].time < Date.now) {
-                            this.db.connection().query(`DELETE FROM dc_purchased_users WHERE user_id = "${rows[i].user_id}"`, (err) => {
+                        if(Date.now() > parseInt(rows[i].time)) {
+                            let discordMember = this.client.users.cache.get(rows[i].user_id);
+                            let discordChannel = this.client.channels.cache.get(rows[i].channel_id);
+
+                            this.db.connection().query(`DELETE FROM dc_allowed_users WHERE user_id = "${rows[i].user_id}" AND channel_id = "${rows[i].channel_id}"`, (err) => {
                                 if(err) throw err;
-                                targetedUser.send(this.embed(5, [targetedUser])).then().catch(console.error);
+                                discordChannel.updateOverwrite(discordMember.id, {
+                                    VIEW_CHANNEL: false,
+                                    SEND_MESSAGES: false,
+                                    ADD_REACTIONS: false,
+                                    ATTACH_FILES: false,
+                                    EMBED_LINKS: false
+                                }).then(channel => {
+                                    discordMember.send(
+                                        this.embed(5, [
+                                            discordMember,
+                                            discordChannel
+                                        ])
+                                    ).then().catch(console.error);
+                                }).catch(console.error)
                             });
-                        } else if(rows[i].time < Date.now() + 86400000) {
-                            targetedUser.send(this.embed(6, [targetedUser])).then().catch(console.error);
                         }
                     }
                 }
@@ -118,84 +130,27 @@ class DbListener{
                 return new MessageEmbed()
                     .setAuthor(this.client.user.username, this.client.user.avatarURL())
                     .setThumbnail(info[0].avatarURL() !== null ? info[0].avatarURL() : "https://i.imgur.com/BxPrsg4.png")
-                    .setDescription(`Hey ${info[0]}, something went wrong with the order ` + "`" + info[1] + "`!")
-                    .addFields(
-                        {
-                            name: "Order Id:",
-                            value: info[1],
-                            inline: true
-                        },
-                        {
-                            name: '\u200b',
-                            value: '\u200b',
-                            inline: true,
-                        },
-                        {
-                            name: "Product Id:",
-                            value: info[2],
-                            inline: true
-                        }
-                    )
-                    .setTimestamp()
-                    .setColor("BLACK")
-
-            case 3:
-                return new MessageEmbed()
-                    .setAuthor(this.client.user.username, this.client.user.avatarURL())
-                    .setThumbnail(info[0].avatarURL() !== null ? info[0].avatarURL() : "https://i.imgur.com/BxPrsg4.png")
-                    .setDescription(`Hey ${info[0]}, something went wrong with the order ` + "`" + info[1] + "`!")
-                    .addFields(
-                        {
-                            name: "Order Id:",
-                            value: info[1],
-                            inline: true
-                        },
-                        {
-                            name: '\u200b',
-                            value: '\u200b',
-                            inline: true,
-                        },
-                        {
-                            name: "Product Id:",
-                            value: info[2],
-                            inline: true
-                        }
-                    )
-                    .setTimestamp()
-                    .setColor("BLACK")
-
-            case 4:
-                return new MessageEmbed()
-                    .setAuthor(this.client.user.username, this.client.user.avatarURL())
-                    .setThumbnail(info[0].avatarURL() !== null ? info[0].avatarURL() : "https://i.imgur.com/BxPrsg4.png")
-                    .setDescription(`Hey ${info[0]}, something went wrong with the order ` + "`" + info[1] + "`!")
-                    .addFields(
-                        {
-                            name: "Order Id:",
-                            value: info[1],
-                            inline: true
-                        },
-                        {
-                            name: '\u200b',
-                            value: '\u200b',
-                            inline: true,
-                        },
-                        {
-                            name: "Product Id:",
-                            value: info[2],
-                            inline: true
-                        }
-                    )
-                    .setTimestamp()
-                    .setColor("BLACK")
-            case 5:
-                return new MessageEmbed()
-                    .setAuthor(this.client.user.username, this.client.user.avatarURL())
-                    .setThumbnail(info[0].avatarURL() !== null ? info[0].avatarURL() : "https://i.imgur.com/BxPrsg4.png")
                     .setDescription(`Hey ${info[0]},  Your membership just expire!`)
+                    .addFields(
+                        {
+                            name: "Channel Concerned:",
+                            value: info[1],
+                            inline: true
+                        },
+                        {
+                            name: '\u200b',
+                            value: '\u200b',
+                            inline: true,
+                        },
+                        {
+                            name: "Get in Back:",
+                            value: "`" + this.config.discord.prefix + "store" + "`" + "\nIn the discord sever you want!",
+                            inline: true
+                        },
+                    )
                     .setTimestamp()
                     .setColor("BLACK")
-            case 6:
+            case 3:
                 return new MessageEmbed()
                     .setAuthor(this.client.user.username, this.client.user.avatarURL())
                     .setThumbnail(info[0].avatarURL() !== null ? info[0].avatarURL() : "https://i.imgur.com/BxPrsg4.png")
