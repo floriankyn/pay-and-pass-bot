@@ -48,6 +48,55 @@ app.get('/discord-bool/:id', async (req, res) => {
 
 });
 
+// push discord id to database
+app.get("/discord-push/:discordId/:channelId", async (req, res) => {
+    let discordId = req.params.discordId;
+    let channelId = req.params.channelId;
+
+    console.log(discordId, channelId)
+
+    let answer = false;
+
+    if(await client.users.cache.some(user => user.id === discordId)) {
+        if(await client.channels.cache.some(channel => channel.id === channelId)) {
+            answer = true;
+        }
+    }
+
+    if(answer) {
+        db.connection().query(`SELECT * FROM dc_purchased_users WHERE user_id = "${discordId}" AND channel_id = ${channelId}`, (err, rows) => {
+            if(err) throw err;
+            // 30 days equals 2592000000 ms
+            let sql;
+
+            if(rows.length >= 1) {
+                sql = `UPDATE dc_purchased_users SET time = ${parseInt(rows[0].time) + 2592000000} WHERE user_id = "${discordId}" AND channel_id = "${channelId}"`;
+            } else {
+                sql = `INSERT INTO dc_purchased_users (user_id, order_id, time, channel_id) VALUES ("${discordId}", "stripe_order_d", "2592000000", "${channelId}")`;
+            }
+
+            db.connection().query(sql, (err) => {
+                let obj;
+                if(err) {
+                    obj = {
+                        query_state: "error"
+                    }
+                } else {
+                    obj = {
+                        query_state: "success"
+                    }
+                }
+                res.send(obj);
+            });
+        });
+    } else {
+        res.send({
+            query_state: "error"
+        });
+        // return an error message
+    }
+});
+
 // product route creation
 //setInterval(() => {
     stripe.products.list({
@@ -66,6 +115,7 @@ app.get('/discord-bool/:id', async (req, res) => {
                        res.render('index', {
                            price: parseInt(respond.amount) / 100,
                            channelName: `${channel.name}`,
+                           channelId: rows[0].channel_id,
                            clientSecret: respond.client_secret,
                            publishableKey: config.stripe.publishableKey,
                            discordImage: guild.iconURL() !== null ? guild.iconURL() : "https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1440924046/wi1mlnkbn2jluko8pzkj.png",
