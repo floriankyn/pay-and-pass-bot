@@ -52,9 +52,6 @@ app.get('/discord-bool/:id', async (req, res) => {
 app.get("/discord-push/:discordId/:channelId", async (req, res) => {
     let discordId = req.params.discordId;
     let channelId = req.params.channelId;
-
-    console.log(discordId, channelId)
-
     let answer = false;
 
     if(await client.users.cache.some(user => user.id === discordId)) {

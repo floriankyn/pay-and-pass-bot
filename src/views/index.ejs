@@ -96,7 +96,6 @@
         } else {
           if(result.paymentIntent.status === "succeeded") {
             let answer = false;
-            console.log(`http://localhost:3001/discord-push/${discord_id}/<%=channelId%>`)
             await fetch(`http://localhost:3001/discord-push/${discord_id}/<%=channelId%>`)
               .then(result => result.json()
               .then(content => {
