@@ -91,7 +91,7 @@ app.get("/discord-push/:discordId/:channelId", async (req, res) => {
 });
 
 // product route creation
-//setInterval(() => {
+setInterval(() => {
     stripe.products.list({
         active: true
     }).then(respond => {
@@ -120,7 +120,7 @@ app.get("/discord-push/:discordId/:channelId", async (req, res) => {
            });
        }
     }).catch(console.error);
-//}, 10000)
+}, 10000)
 
 
 app.listen(port, () => {
